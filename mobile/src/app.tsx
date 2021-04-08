@@ -5,6 +5,7 @@ import routes from './routes';
 import logo from './assets/logo.png';
 
 export default app({
+  likeApp: true,
   routes,
   ssr(Router) {
     return {

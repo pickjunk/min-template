@@ -8,54 +8,29 @@ export default routes({
     component: './layouts/app',
     children: [
       {
-        path: '/',
-        name: 'gate',
-        component: './pages/gate',
-      },
-      {
-        component: './layouts/basic',
+        component: './layouts/nav',
         children: [
           {
-            component: './layouts/content',
-            children: [
-              {
-                path: '/dashboard',
-                name: 'dashboard',
-                component: './pages/dashboard',
-              },
-              {
-                path: '/delay',
-                name: 'delay',
-                component: './pages/delay',
-              },
-              {
-                path: '/h5',
-                name: 'h5',
-                component: './pages/h5',
-              },
-              {
-                path: '/weapp',
-                name: 'weapp',
-                component: './pages/weapp',
-              },
-              {
-                path: '/child',
-                name: 'child',
-                component: './pages/child',
-              },
-            ],
+            path: '/',
+            name: 'home',
+            component: './pages/home',
           },
           {
-            component: './layouts/exception',
-            children: [
-              {
-                path: '/404',
-                name: '404',
-                component: './pages/404',
-              },
-            ],
+            path: '/my',
+            name: 'my',
+            component: './pages/my',
           },
         ],
+      },
+      {
+        path: '/back',
+        name: 'back',
+        component: './pages/back',
+      },
+      {
+        path: '/404',
+        name: '404',
+        component: './pages/404',
       },
     ],
   },

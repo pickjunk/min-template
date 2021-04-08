@@ -10,7 +10,7 @@
     "@babel/plugin-proposal-object-rest-spread",
     [
       "import", {
-        "libraryName": "antd",
+        "libraryName": "antd-mobile",
         "style": true
       }
     ]

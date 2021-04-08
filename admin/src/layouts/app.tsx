@@ -27,7 +27,7 @@ export default function Loading({
   }, []);
 
   return loading ? (
-    <div className="loading">
+    <div id="loading">
       <Spin size="large" />
     </div>
   ) : (
