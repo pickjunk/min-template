@@ -1,4 +1,5 @@
 let config = {
+  stats: 'errors-only',
   entry: './src/app.tsx',
   module: {
     rules: [
@@ -18,16 +19,6 @@ let config = {
           loader: 'css-loader',
         }, {
           loader: 'less-loader',
-          options: {
-            lessOptions: {
-              // modifyVars: {
-              //   'primary-color': '#1DA57A',
-              //   'link-color': '#1DA57A',
-              //   'border-radius-base': '2px',
-              // },
-              javascriptEnabled: true,
-            },
-          },
         }],
       },
       {

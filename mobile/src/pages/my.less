@@ -1,0 +1,31 @@
+#my {
+  .header {
+    .za-panel__header {
+      display: none;
+    }
+    .header-body {
+      display: flex;
+      justify-content: flex-start;
+      flex-direction: row;
+      padding: 16px;
+      margin-bottom: 16px;
+      & > img {
+        width: 60px;
+        height: 60px;
+        border-radius: 8px;
+      }
+      & > div {
+        margin-left: 12px;
+        .name {
+          margin-top: 8px;
+          font-weight: bold;
+        }
+        .desc {
+          margin-top: 8px;
+          color: var(--color-text-caption);
+          font-size: var(--font-size-sm);
+        }
+      }
+    }
+  }
+}

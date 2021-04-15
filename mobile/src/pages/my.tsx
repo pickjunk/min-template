@@ -1,28 +1,23 @@
 import React from 'react';
-import { Button } from 'antd-mobile';
-import { router } from '@pickjunk/min';
+import { Panel, Cell } from 'zarm';
+// @ts-ignore
+import avatar from '../assets/images/avatar.png';
+import './my.less';
 
 export default function My() {
   return (
-    <div
-      style={{
-        height: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <Button
-        type="primary"
-        style={{ padding: '0 16px' }}
-        onClick={function () {
-          router.push({
-            name: 'back',
-          });
-        }}
-      >
-        点击打开新页面
-      </Button>
+    <div id="my">
+      <Panel className="header">
+        <div className="header-body">
+          <img src={avatar} />
+          <div>
+            <div className="name">蔡俊杰</div>
+            <div className="desc">企者不立，跨者不行</div>
+          </div>
+        </div>
+      </Panel>
+      <Cell title="菜单项一" />
+      <Cell title="菜单项二" />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Icon, TabBar } from 'antd-mobile';
+import { TabBar, ActivityIndicator } from 'zarm';
 import { router, useRouter, RouteLocation } from '@pickjunk/min';
+import Icon from '../assets/icon';
 import './nav.less';
 
 interface NavItem extends RouteLocation {
@@ -12,12 +13,12 @@ interface NavItem extends RouteLocation {
 
 const items: NavItem[] = [
   {
-    icon: <i className="iconfont icon-shouye" />,
+    icon: <Icon type="icon-shouye" />,
     title: '首页',
     name: 'home',
   },
   {
-    icon: <i className="iconfont icon-my" />,
+    icon: <Icon type="icon-my" />,
     title: '我的',
     name: 'my',
   },
@@ -35,20 +36,21 @@ function NavBar() {
 
   return (
     show && (
-      <TabBar>
+      <TabBar
+        activeKey={location.name}
+        onChange={function (name) {
+          router.replace({
+            name: name as string,
+          });
+        }}
+      >
         {items.map(({ name, icon, title }) => {
           return (
             <TabBar.Item
               key={name}
+              itemKey={name}
               icon={icon}
-              selectedIcon={icon}
               title={title}
-              selected={name == location.name}
-              onPress={function () {
-                router.replace({
-                  name,
-                });
-              }}
             ></TabBar.Item>
           );
         })}
@@ -57,7 +59,7 @@ function NavBar() {
   );
 }
 
-export function Loading({ children }: { children: React.ReactElement }) {
+export function AppLoading({ children }: { children: React.ReactElement }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -71,7 +73,7 @@ export function Loading({ children }: { children: React.ReactElement }) {
 
   return loading ? (
     <div id="loading">
-      <Icon type="loading" size="lg" />
+      <ActivityIndicator size="lg" />
     </div>
   ) : (
     children
@@ -79,36 +81,12 @@ export function Loading({ children }: { children: React.ReactElement }) {
 }
 
 export default function Nav({ children }: { children: React.ReactNode }) {
-  const { location } = useRouter();
-
   return (
-    <Loading>
-      <div id="basic">
-        <TabBar>
-          {items.map(({ name, icon, title }) => {
-            return (
-              <TabBar.Item
-                key={name}
-                icon={icon}
-                selectedIcon={icon}
-                title={title}
-                selected={name == location.name}
-                onPress={function () {
-                  if (name == location.name) {
-                    return;
-                  }
-
-                  router.replace({
-                    name,
-                  });
-                }}
-              >
-                {children}
-              </TabBar.Item>
-            );
-          })}
-        </TabBar>
+    <AppLoading>
+      <div id="nav">
+        <div className="content">{children}</div>
+        <NavBar />
       </div>
-    </Loading>
+    </AppLoading>
   );
 }

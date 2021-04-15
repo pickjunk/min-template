@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'antd-mobile';
+import { Button } from 'zarm';
 import { router } from '@pickjunk/min';
 
 export default function My() {
@@ -13,7 +13,7 @@ export default function My() {
       }}
     >
       <Button
-        type="primary"
+        theme="primary"
         style={{ padding: '0 16px' }}
         onClick={function () {
           router.back();
