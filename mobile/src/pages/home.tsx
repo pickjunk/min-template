@@ -31,13 +31,8 @@ export default function Home() {
     },
     item(data) {
       return (
-        <Link name="back">
-          <Cell
-            key={data.id}
-            hasArrow
-            title={data.title}
-            description={data.desc}
-          />
+        <Link name="back" key={data.id}>
+          <Cell hasArrow title={data.title} description={data.desc} />
         </Link>
       );
     },

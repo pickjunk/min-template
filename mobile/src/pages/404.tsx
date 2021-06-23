@@ -7,13 +7,17 @@ import i404 from '../assets/images/404.svg';
 export default function notFound() {
   return (
     <div
-      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+      className="center"
+      style={{
+        height: '100%',
+        flexDirection: 'column',
+      }}
     >
       <img src={i404} />
       <h3>404</h3>
-      <Button theme="primary">
-        <Link name="home">返回首页</Link>
-      </Button>
+      <Link name="home">
+        <Button theme="primary">返回首页</Button>
+      </Link>
     </div>
   );
 }
