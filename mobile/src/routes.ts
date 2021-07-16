@@ -15,12 +15,18 @@ export default routes({
             name: 'home',
             component: './pages/home',
           },
+
           {
             path: '/my',
             name: 'my',
             component: './pages/my',
           },
         ],
+      },
+      {
+        path: '/sublist',
+        name: 'sublist',
+        component: './pages/sublist',
       },
       {
         path: '/back',

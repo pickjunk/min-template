@@ -12,7 +12,7 @@ let config = {
       },
     ],
   },
-  // base: '/h5',
+  base: '/h5',
   // log: 'app.log',
 };
 

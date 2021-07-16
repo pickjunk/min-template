@@ -5,7 +5,7 @@ import { Link } from '@pickjunk/min';
 
 export default function Home() {
   useEffect(function () {
-    console.log('home mounted');
+    console.log('sublist mounted');
   }, []);
 
   const list = useList({
@@ -35,7 +35,7 @@ export default function Home() {
     },
     item(data) {
       return (
-        <Link name="sublist" key={data.id}>
+        <Link name="back" key={data.id}>
           <Cell hasArrow title={data.title} description={data.desc} />
         </Link>
       );

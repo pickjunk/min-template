@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from 'zarm';
 import { router } from '@pickjunk/min';
 
-export default function My() {
+export default function Back() {
+  useEffect(function () {
+    console.log('back mounted');
+  }, []);
+
   return (
     <div
       style={{
