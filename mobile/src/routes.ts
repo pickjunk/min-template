@@ -29,9 +29,9 @@ export default routes({
         component: './pages/sublist',
       },
       {
-        path: '/back',
-        name: 'back',
-        component: './pages/back',
+        path: '/detail/:id',
+        name: 'detail',
+        component: './pages/detail',
       },
       {
         path: '/404',

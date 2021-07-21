@@ -9,7 +9,7 @@ export default function Home() {
   }, []);
 
   const list = useList({
-    async load(page) {
+    async loadList(page) {
       const offset = (page - 1) * 20;
       console.log({
         page,
@@ -17,15 +17,14 @@ export default function Home() {
       });
 
       await new Promise(function (r) {
-        setTimeout(r, 2000);
+        setTimeout(r, 1000);
       });
 
       const data = [];
       for (let i = 0; i < 20; i++) {
         data.push({
           id: offset + i,
-          title: `项目 - ${offset + i + 1}`,
-          desc: '描述',
+          title: `菜单 - ${offset + i + 1}`,
         });
       }
       return {
@@ -33,14 +32,14 @@ export default function Home() {
         total: 60,
       };
     },
-    item(data) {
+    renderItem(data) {
       return (
         <Link name="sublist" key={data.id}>
-          <Cell hasArrow title={data.title} description={data.desc} />
+          <Cell hasArrow title={data.title} />
         </Link>
       );
     },
   });
 
-  return list;
+  return list.render();
 }

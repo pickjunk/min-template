@@ -9,7 +9,7 @@ export default function Home() {
   }, []);
 
   const list = useList({
-    async load(page) {
+    async loadList(page) {
       const offset = (page - 1) * 20;
       console.log({
         page,
@@ -17,15 +17,16 @@ export default function Home() {
       });
 
       await new Promise(function (r) {
-        setTimeout(r, 2000);
+        setTimeout(r, 1000);
       });
 
       const data = [];
       for (let i = 0; i < 20; i++) {
+        const id = offset + i;
         data.push({
-          id: offset + i,
-          title: `项目 - ${offset + i + 1}`,
-          desc: '描述',
+          id,
+          title: `事项 - ${id + 1}`,
+          desc: <p style={{ color: 'red' }}>未处理</p>,
         });
       }
       return {
@@ -33,14 +34,30 @@ export default function Home() {
         total: 60,
       };
     },
-    item(data) {
+    async loadItem(item) {
+      await new Promise(function (r) {
+        setTimeout(r, 500);
+      });
+      item.desc = <p style={{ color: 'green' }}>已处理</p>;
+      return item;
+    },
+    renderItem(data, i) {
       return (
-        <Link name="back" key={data.id}>
+        <Link
+          name="detail"
+          key={data.id}
+          args={{ id: data.id }}
+          context={{
+            saved() {
+              list.refreshItem(i);
+            },
+          }}
+        >
           <Cell hasArrow title={data.title} description={data.desc} />
         </Link>
       );
     },
   });
 
-  return list;
+  return list.render();
 }

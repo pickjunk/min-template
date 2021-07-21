@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { log } from '@pickjunk/min';
+import React, { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Pull } from 'zarm';
+import useForceUpdate from 'use-force-update';
 import './list.less';
 
 const REFRESH_STATE = {
@@ -21,113 +23,124 @@ const LOAD_STATE = {
 };
 
 export default function useList({
-  load,
-  item,
+  loadList,
+  loadItem,
+  renderItem,
 }: {
-  load: (
-    page: number,
-  ) => Promise<{
+  loadList: (page: number) => Promise<{
     data: any[];
     total: number;
   }>;
-  item: (data: any, index: number) => React.ReactNode;
+  loadItem?: (item: any) => Promise<any>;
+  renderItem(data: any, index: number): React.ReactNode;
 }) {
-  const [data, setData] = useState(
-    [] as {
+  const state = useRef({
+    data: [] as {
       id: number;
       title: string;
       desc: string;
     }[],
-  );
-  const [page, setPage] = useState(0);
+    page: 0,
+  });
   const [loading, setLoading] = useState(LOAD_STATE.normal);
   const [refreshing, setRefreshing] = useState(REFRESH_STATE.normal);
+  const forceUpdate = useForceUpdate();
+
+  const s = state.current;
 
   async function loadData() {
     setLoading(LOAD_STATE.loading);
     try {
-      const r = await load(page + 1);
-      const list = [...data, ...r.data];
-      setPage(page + 1);
-      setData(list);
-      if (list.length >= r.total) {
+      const r = await loadList(s.page + 1);
+      s.data.push(...r.data);
+      s.page++;
+      if (s.data.length >= r.total) {
         setLoading(LOAD_STATE.complete);
       } else {
         setLoading(LOAD_STATE.normal);
       }
     } catch (e) {
-      console.error(e);
+      log.error(e);
       setLoading(LOAD_STATE.normal);
     }
   }
-  async function refreshData() {
+  async function refreshList() {
     setRefreshing(REFRESH_STATE.loading);
     try {
-      const r = await load(1);
-      setPage(1);
-      setData(r.data);
+      const r = await loadList(1);
+      s.data = r.data;
+      s.page = 1;
     } catch (e) {
-      console.error(e);
-      setRefreshing(REFRESH_STATE.normal);
+      log.error(e);
     }
     setRefreshing(REFRESH_STATE.normal);
   }
+  async function refreshItem(i: number) {
+    s.data[i] = await loadItem(s.data[i]);
+    forceUpdate();
+  }
 
   useEffect(function () {
-    refreshData();
+    refreshList();
   }, []);
 
-  return (
-    <Pull
-      refresh={{
-        state: refreshing,
-        handler: refreshData,
-        render(state: number, percent: number) {
-          switch (state) {
-            case REFRESH_STATE.pull:
-              return (
-                <div className="indicator">
-                  <ActivityIndicator loading={false} percent={percent} />
-                  <span>下拉刷新</span>
-                </div>
-              );
-            case REFRESH_STATE.drop:
-              return (
-                <div className="indicator">
-                  <ActivityIndicator loading={false} percent={100} />
-                  <span>松开立即刷新</span>
-                </div>
-              );
-            case REFRESH_STATE.loading:
-              return (
-                <div className="indicator">
-                  <ActivityIndicator />
-                  <span>加载中</span>
-                </div>
-              );
-          }
-        },
-      }}
-      load={{
-        state: loading,
-        handler: loadData,
-        distance: 200,
-        render(state: number) {
-          switch (state) {
-            case LOAD_STATE.loading:
-              return (
-                <div className="indicator">
-                  <ActivityIndicator />
-                  <span>加载中</span>
-                </div>
-              );
-            case LOAD_STATE.complete:
-              return <div className="indicator">-- 到此为止，告辞 --</div>;
-          }
-        },
-      }}
-    >
-      {data.map(item)}
-    </Pull>
-  );
+  return {
+    render() {
+      return (
+        <Pull
+          refresh={{
+            state: refreshing,
+            handler: refreshList,
+            render(state: number, percent: number) {
+              switch (state) {
+                case REFRESH_STATE.pull:
+                  return (
+                    <div className="indicator">
+                      <ActivityIndicator loading={false} percent={percent} />
+                      <span>下拉刷新</span>
+                    </div>
+                  );
+                case REFRESH_STATE.drop:
+                  return (
+                    <div className="indicator">
+                      <ActivityIndicator loading={false} percent={100} />
+                      <span>松开立即刷新</span>
+                    </div>
+                  );
+                case REFRESH_STATE.loading:
+                  return (
+                    <div className="indicator">
+                      <ActivityIndicator />
+                      <span>加载中</span>
+                    </div>
+                  );
+              }
+            },
+          }}
+          load={{
+            state: loading,
+            handler: loadData,
+            distance: 200,
+            render(state: number) {
+              switch (state) {
+                case LOAD_STATE.loading:
+                  return (
+                    <div className="indicator">
+                      <ActivityIndicator />
+                      <span>加载中</span>
+                    </div>
+                  );
+                case LOAD_STATE.complete:
+                  return <div className="indicator">-- 到此为止，告辞 --</div>;
+              }
+            },
+          }}
+        >
+          {s.data.map(renderItem)}
+        </Pull>
+      );
+    },
+    refreshList,
+    refreshItem: loadItem ? refreshItem : undefined,
+  };
 }
