@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Cell } from 'zarm';
 import useList from '../hooks/list';
-import { Link } from '@pickjunk/min';
+import { Link, useRouter } from '@pickjunk/min';
 
 export default function Home() {
   useEffect(function () {
@@ -9,6 +9,7 @@ export default function Home() {
   }, []);
 
   const list = useList({
+    autoLoad: false,
     async loadList(page) {
       const offset = (page - 1) * 20;
       console.log({
@@ -39,6 +40,12 @@ export default function Home() {
         </Link>
       );
     },
+  });
+
+  const { onShow } = useRouter();
+  onShow(function () {
+    console.log('home onShow');
+    list.load();
   });
 
   return list.render();

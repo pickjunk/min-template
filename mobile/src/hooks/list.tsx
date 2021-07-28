@@ -26,6 +26,7 @@ export default function useList({
   loadList,
   loadItem,
   renderItem,
+  autoLoad = true,
 }: {
   loadList: (page: number) => Promise<{
     data: any[];
@@ -33,13 +34,10 @@ export default function useList({
   }>;
   loadItem?: (item: any) => Promise<any>;
   renderItem(data: any, index: number): React.ReactNode;
+  autoLoad?: boolean;
 }) {
   const state = useRef({
-    data: [] as {
-      id: number;
-      title: string;
-      desc: string;
-    }[],
+    data: [] as any[],
     page: 0,
   });
   const [loading, setLoading] = useState(LOAD_STATE.normal);
@@ -80,9 +78,11 @@ export default function useList({
     forceUpdate();
   }
 
-  useEffect(function () {
-    refreshList();
-  }, []);
+  if (autoLoad) {
+    useEffect(function () {
+      refreshList();
+    }, []);
+  }
 
   return {
     render() {
@@ -140,6 +140,7 @@ export default function useList({
         </Pull>
       );
     },
+    load: refreshList,
     refreshList,
     refreshItem: loadItem ? refreshItem : undefined,
   };
