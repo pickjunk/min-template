@@ -143,5 +143,8 @@ export default function useList({
     load: refreshList,
     refreshList,
     refreshItem: loadItem ? refreshItem : undefined,
+    item(i: number) {
+      return s.data[i];
+    },
   };
 }
